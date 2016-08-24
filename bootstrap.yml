@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: False
+  remote_user: root
+  tasks:
+    - name: "Bootstrap python on the host"
+      script: bootstrap.sh
+      args:
+        creates: /usr/bin/python2
+     

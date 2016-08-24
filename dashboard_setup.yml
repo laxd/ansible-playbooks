@@ -1,0 +1,7 @@
+---
+- hosts: dashboard
+  tasks:
+    - name: Install Telegraf, Grafana and Influxdb
+      package:
+        name: grafana,telegraf,influxdb
+ 

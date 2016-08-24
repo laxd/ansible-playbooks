@@ -1,0 +1,4 @@
+---
+- include: bootstrap.yml
+- include: setup_pacman.yml
+- include: install_vim.yml
