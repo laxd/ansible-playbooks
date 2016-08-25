@@ -1,4 +1,5 @@
 ---
 - include: bootstrap.yml
+- include: setup_ansible_ssh_user.yml
 - include: setup_pacman.yml
 - include: install_vim.yml
