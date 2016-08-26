@@ -1,0 +1,7 @@
+---
+- name: "Bootstrap python on the host"
+  script: bootstrap.sh
+  remote_user: root
+  args:
+    creates: /usr/bin/python2
+   
