@@ -1,0 +1,46 @@
+---
+- name: Ensure install directory exists
+  file:
+    name: "/tmp/aur_install/{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ packages }}"
+
+- name: Download from AUR
+  get_url:
+    url: "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h={{ item }}"
+    dest: "/tmp/aur_install/{{ item }}/PKGBUILD"
+  with_items:
+    - "{{ packages }}"
+
+- name: Make package
+  shell: "makepkg PKGBUILD --skippgpcheck --nodeps"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/bin/core_perl"
+  args:
+    chdir: "/tmp/aur_install/{{ item }}"
+    creates: "/tmp/aur_install/{{ item }}/{{ item }}*.tar.xz"
+  with_items:
+    - "{{ packages }}"
+
+- name: Reset Permissions
+  file:
+    name: "/tmp/aur_install/{{ item }}"
+    mode: 0777
+    recurse: true
+  with_items:
+    - "{{ packages }}"
+
+- name: Install
+  become: true
+  shell: "pacman --noconfirm --noprogressbar --needed -U {{ item }}*pkg.tar.xz"
+  args:
+    chdir: /tmp/aur_install/{{ item }}
+  with_items:
+    - "{{ packages }}"
+
+- name: Cleanup
+  file:
+    name: /tmp/aur_install
+    state: absent

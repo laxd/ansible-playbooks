@@ -1,0 +1,18 @@
+---
+- name: Install dependencies
+  become: true
+  pacman:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - make
+    - base-devel
+    - yajl
+    - expac
+    - git
+
+- include: install_from_aur.yml
+  vars:
+    packages:
+      - cower
+      - pacaur
