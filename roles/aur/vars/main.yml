@@ -1,0 +1,4 @@
+---
+aur_install_dir: "/tmp/aur_install"
+aur_install_dir_permissions: 0777
+non_root_install_user: ansible

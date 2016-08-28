@@ -1,4 +1,4 @@
 ---
 - hosts: arch
   roles:
-    - { role: aur }
+    - { role: aur, remote_user: ansible }

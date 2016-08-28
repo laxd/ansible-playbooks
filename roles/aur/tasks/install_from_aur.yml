@@ -1,33 +1,37 @@
 ---
 - name: Ensure install directory exists
   file:
-    name: "/tmp/aur_install/{{ item }}"
+    name: "{{ aur_install_dir }}/{{ item }}"
     state: directory
-    mode: 0777
+    mode: "{{ aur_install_dir_permissions }}"
   with_items:
     - "{{ packages }}"
 
 - name: Download from AUR
   get_url:
     url: "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h={{ item }}"
-    dest: "/tmp/aur_install/{{ item }}/PKGBUILD"
+    dest: "{{ aur_install_dir }}/{{ item }}/PKGBUILD"
   with_items:
     - "{{ packages }}"
 
 - name: Make package
+  remote_user: "{{ non_root_install_user }}"
   shell: "makepkg PKGBUILD --skippgpcheck --nodeps"
+  # Update environment as perl's bin dir is not
+  # added to path for the ansible user and
+  # make will fail to run otherwise (no pod2man)
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/bin/core_perl"
   args:
-    chdir: "/tmp/aur_install/{{ item }}"
-    creates: "/tmp/aur_install/{{ item }}/{{ item }}*.tar.xz"
+    chdir: "{{ aur_install_dir }}/{{ item }}"
+    creates: "{{ aur_install_dir }}/{{ item }}/{{ item }}*.tar.xz"
   with_items:
     - "{{ packages }}"
 
 - name: Reset Permissions
   file:
-    name: "/tmp/aur_install/{{ item }}"
-    mode: 0777
+    name: "{{ aur_install_dir }}/{{ item }}"
+    mode: "{{ aur_install_dir_permissions }}"
     recurse: true
   with_items:
     - "{{ packages }}"
@@ -36,11 +40,11 @@
   become: true
   shell: "pacman --noconfirm --noprogressbar --needed -U {{ item }}*pkg.tar.xz"
   args:
-    chdir: /tmp/aur_install/{{ item }}
+    chdir: "{{ aur_install_dir }}/{{ item }}"
   with_items:
     - "{{ packages }}"
 
 - name: Cleanup
   file:
-    name: /tmp/aur_install
+    name: "{{ aur_install_dir }}"
     state: absent
