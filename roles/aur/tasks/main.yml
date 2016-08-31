@@ -1,2 +1,11 @@
 ---
-- include: install_pacaur.yml
+- name: "Check package required"
+  shell: "pacaur -Qs {{ package }}"
+  register: installed
+  ignore_errors: true
+
+
+- name: "Install Package"
+  shell: "pacaur -Syu {{ package }}"
+  when: installed.rc != 0
+  notify: "reload systemd"
