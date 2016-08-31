@@ -1,0 +1,19 @@
+---
+- hosts: all
+  remote_user: ansible
+  roles:
+    - { role: aur, package: telegraf }
+    - { role: aur, package: influxdb }
+    - { role: aur, package: grafana-bin }
+
+  tasks:
+
+  - name: "Enable telegraf, influxdb and grafana"
+    service:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items:
+      - influxdb
+      - telegraf
+      - grafana
