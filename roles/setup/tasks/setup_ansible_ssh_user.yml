@@ -1,4 +1,8 @@
 ---
+- name: "Gather facts"
+  setup:
+
+
 - name: "Ensure sudo is installed"
   package:
     name: sudo
