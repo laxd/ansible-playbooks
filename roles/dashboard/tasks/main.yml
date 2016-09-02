@@ -1,0 +1,14 @@
+---
+# Force systemd to reload-daemon
+- meta: flush_handlers
+
+- name: "Start telegraf, influxdb and grafana"
+  become: true
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - influxdb
+    - telegraf
+    - grafana

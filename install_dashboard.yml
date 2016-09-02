@@ -1,18 +1,4 @@
 ---
-- hosts: all
+- hosts: dashboard
   roles:
-    - { role: aur, package: telegraf }
-    - { role: aur, package: influxdb }
-    - { role: aur, package: grafana-bin }
-
-  tasks:
-    - name: "Start telegraf, influxdb and grafana"
-      become: true
-      service:
-        name: "{{ item }}"
-        state: started
-        enabled: yes
-      with_items:
-        - influxdb
-        - telegraf
-        - grafana
+    - dashboard
