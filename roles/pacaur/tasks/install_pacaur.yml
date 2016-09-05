@@ -11,8 +11,15 @@
     - expac
     - git
 
+- name: Check install required
+  command: pacman -Q ^pacaur$
+  register: required
+  ignore_errors: true
+  failed_when: false
+
 - include: install_from_aur.yml
   vars:
     packages:
       - cower
       - pacaur
+  when: required
