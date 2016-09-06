@@ -1,0 +1,25 @@
+---
+
+- name: Install Transmission
+  package:
+    name: transmission-cli
+    state: present
+
+- name: Stop transmission before copying config
+  become: true
+  service:
+    name: transmission
+    state: stopped
+
+- name: Copy transmission config
+  become: true
+  copy:
+    src: settings.json
+    dest: /var/lib/transmission/.config/transmission-daemon/settings.json
+
+- name: Start and enable transmission
+  become: true
+  service:
+    name: transmission
+    state: started
+    enabled: true

@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: pacaur }
+  - { role: aur, package: sabnzbd }

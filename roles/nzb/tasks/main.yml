@@ -1,0 +1,10 @@
+---
+
+- meta: flush_handlers
+
+- name: Start sabnzbd
+  become: true
+  service:
+    name: sabnzbd
+    state: started
+    enabled: true

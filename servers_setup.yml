@@ -1,0 +1,23 @@
+---
+
+- hosts: nzb
+  roles:
+    - nzb
+
+- hosts: torrent
+  roles:
+    - transmission
+
+- hosts: test # plex
+
+  roles:
+    - { role: plex }
+    - { role: filebot }
+
+- hosts: dashboard
+  roles:
+    - dashboard
+
+- hosts: all
+  roles:
+    - telegraf

@@ -1,0 +1,9 @@
+---
+
+- meta: flush_handlers
+
+- name: Start plex
+  service:
+    name: plexmediaserver
+    state: started
+    enabled: true
