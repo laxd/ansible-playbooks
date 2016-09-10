@@ -1,11 +1,11 @@
 ---
 - name: "AUR | Check package required | {{ package }}"
-  shell: "pacaur -Qs ^{{ package }}$"
+  shell: "pacman -Q {{ package }}"
   register: installed
   ignore_errors: true
   failed_when: false
 
 - name: "AUR | Install Package | {{ package }}"
   shell: "pacaur -Sy --force --noconfirm {{ package }}"
-  when: installed.rc != 0
+  when: installed|succeeded
   notify: "reload systemd"
