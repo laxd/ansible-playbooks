@@ -28,14 +28,6 @@
   with_items:
     - "{{ packages }}"
 
-- name: Reset Permissions
-  file:
-    name: "{{ aur_install_dir }}/{{ item }}"
-    mode: "{{ aur_install_dir_permissions }}"
-    recurse: true
-  with_items:
-    - "{{ packages }}"
-
 - name: Install
   become: true
   shell: "pacman --noconfirm --noprogressbar --needed -U {{ item }}*pkg.tar.xz"
