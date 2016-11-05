@@ -1,23 +1,40 @@
 ---
 
-- hosts: nzb
-  roles:
-    - nzb
-
 - hosts: torrent
   roles:
     - transmission
+    - nzb
+    - couchpotato
+    - headphones
 
-- hosts: test # plex
-
+- hosts: plex
   roles:
-    - { role: plex }
-    - { role: filebot }
+    - plex
+    - filebot
 
 - hosts: dashboard
   roles:
-    - dashboard
+    - influxdb
+    - grafana
+
+- hosts: backup
+  roles:
+    - crashplan
+
+- hosts: jira
+  roles:
+    - jira
+
+- hosts: fah
+  roles:
+    - foldingathome
+
+- hosts: test
+  roles:
+    - influxdb
+    - grafana
 
 - hosts: all
   roles:
+    - vim
     - telegraf
