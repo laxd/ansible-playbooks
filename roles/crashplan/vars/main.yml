@@ -1,0 +1,4 @@
+---
+crashplan_download_location: /opt/crashplan
+crashplan_location: "{{ crashplan_download_location}}/crashplan-install"
+crashplan_version: 4.8.0

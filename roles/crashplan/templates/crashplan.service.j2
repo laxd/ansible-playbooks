@@ -1,0 +1,11 @@
+[Unit]
+Description=crashplan
+After=network.target
+
+[Service]
+Type=forking
+ExecStart={{ crashplan_location }}/scripts/CrashPlanEngine start
+ExecStop={{ crashplan_location }}/scripts/CrashPlanEngine stop
+
+[Install]
+WantedBy=multi-user.target

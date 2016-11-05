@@ -1,0 +1,43 @@
+---
+- name: Create crashplan dir
+  become: true
+  file:
+    path: "{{ crashplan_download_location }}"
+    state: directory
+    mode: 0755
+
+- name: Download and unzip crashplan
+  become: true
+  unarchive:
+    src: "https://download.code42.com/installs/linux/install/CrashPlan/CrashPlan_{{ crashplan_version }}_Linux.tgz"
+    dest: "{{ crashplan_download_location }}"
+    remote_src: true
+    creates: "{{ crashplan_location }}"
+
+- name: Install dependencies
+  become: true
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - cpio
+    - jre8-openjdk-headless
+
+- name: Set crashplan variables
+  become: true
+  template:
+    src: install.vars.j2
+    dest: "{{ crashplan_location }}/install.vars"
+
+- name: Install crashplan
+  become: true
+  shell: "gunzip -c {{ crashplan_location }}/CrashPlan_{{crashplan_version}}.cpi | cpio -i --no-preserve-owner"
+  args:
+    chdir: "{{ crashplan_location }}"
+
+- name: Copy systemd service file
+  become: true
+  template:
+    src: crashplan.service.j2
+    dest: /usr/lib/systemd/system/crashplan.service
+  notify: systemd-reload
