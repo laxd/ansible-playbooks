@@ -1,0 +1,23 @@
+---
+- name: Download jira
+  get_url:
+    url: "https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}-x64.bin"
+    dest: "{{ jira_download_location }}/jira.bin"
+    mode: 0777
+
+- name: Install postgres
+  become: true
+  package:
+    name: postgresql
+    state: present
+
+- name: Copy install settings
+  template:
+    src: response.varfile.j2
+    dest: "{{ jira_download_location }}/response.varfile"
+
+- name: Install jira
+  become: true
+  shell: "{{ jira_download_location }}/jira.bin -q -varfile {{ jira_download_location }}/response.varfile"
+  args:
+    creates: "{{ jira_install_location }}"
