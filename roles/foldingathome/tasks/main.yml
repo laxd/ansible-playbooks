@@ -1,0 +1,22 @@
+---
+- name: Copy config.xml file
+  become: true
+  template:
+    src: config.xml.j2
+    dest: "{{ fah_home }}/config.xml"
+
+- name: Copy systemd file
+  become: true
+  template:
+    src: foldingathome.service.j2
+    dest: /usr/lib/systemd/system/foldingathome.service
+
+# Make sure systemd knows about fah
+- meta: flush_handlers
+
+- name: Start folding
+  become: true
+  service:
+    name: foldingathome
+    state: started
+    enabled: true

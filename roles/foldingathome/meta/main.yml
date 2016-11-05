@@ -1,0 +1,4 @@
+---
+dependencies:
+  - pacaur
+  - { role: aur, package: foldingathome }

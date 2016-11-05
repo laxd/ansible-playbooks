@@ -1,0 +1,12 @@
+[Unit]
+Description=Folding@home distributed computing client
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory={{ fah_home }}
+ExecStart={{ fah_home }}/FAHClient --cpus={{ fah_cpu_count }} --config {{ fah_home }}/config.xml --exec-directory={{ fah_home }} --data-directory={{ fah_home }}
+
+[Install]
+WantedBy=multi-user.target
+
