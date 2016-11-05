@@ -1,0 +1,60 @@
+---
+
+- name: Create couchpotato group
+  become: true
+  group:
+    name: "{{ couchpotato_group }}"
+    state: present
+
+- name: Create couchpotato user
+  become: true
+  user:
+    name: "{{ couchpotato_user }}"
+    group: "{{ couchpotato_group }}"
+    system: yes
+    state: present
+
+- name: Install installation dependencies
+  become: true
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - python2-pip
+
+- name: Install ssl python 
+  become: true
+  pip:
+    name: pyopenssl
+    executable: pip2
+
+- name: Download couchpotato
+  become: true
+  git:
+    repo: https://github.com/CouchPotato/CouchPotatoServer.git
+    dest: "{{ couchpotato_install_dir }}"
+    update: false
+
+- name: Copy couchpotato config
+  become: true
+  template:
+    src: config.ini
+    dest: "{{ couchpotato_install_dir }}/config.ini"
+
+- name: Copy service file
+  become: true
+  template:
+    src: couchpotato.service.j2
+    dest: /etc/systemd/system/couchpotato.service
+
+- name: Reload systemd
+  become: true
+  shell: systemctl daemon-reload
+
+- name: Start couchpotato
+  become: true
+  service:
+    name: couchpotato
+    state: started
+    enabled: true

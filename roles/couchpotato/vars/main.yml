@@ -1,0 +1,14 @@
+---
+couchpotato_user: couchpotato
+couchpotato_group: couchpotato
+couchpotato_install_dir: /var/lib/couchpotato
+couchpotato_username: "USERNAME"
+sabnzbd_url: "sabnzb_url:8080"
+transmission_url: "transmission_url:9091"
+transmission_password: "SETPASSWORD"
+pushbullet_api_key: API_KEY_HERE
+pushover_api_token: API_KEY_HERE
+sabnzbd_api_key: API_KEY_HERE
+newznab_hosts: newznab_host1,newznab_host2
+newznab_api_keys: API_KEY_HERE
+themoviedb_key: API_KEY_HERE

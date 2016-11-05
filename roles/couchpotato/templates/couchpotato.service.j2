@@ -1,0 +1,12 @@
+[Unit]
+Description=CouchPotato
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python2 {{ couchpotato_install_dir }}/CouchPotato.py
+Type=simple
+User={{ couchpotato_user }}
+Group={{ couchpotato_group }}
+
+[Install]
+WantedBy=multi-user.target
