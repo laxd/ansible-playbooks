@@ -1,10 +1,92 @@
 ---
+- include_vars: "{{ item }}"
+  with_first_found:
+    - "../vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version | int}}.yml"
+    - "../vars/{{ ansible_distribution }}.yml"
+    - "../vars/{{ansible_os_family }}.yml"
+    - "../vars/default.yml"
 
-- meta: flush_handlers
+- name: Create sabnzbd group
+  become: true
+  group:
+    name: "{{ sabnzbd_group }}"
+    state: present
+
+- name: Create user/group
+  become: true
+  user:
+    name: "{{ sabnzbd_user }}"
+    group: "{{ sabnzbd_group }}"
+    system: yes
+    state: present
+
+- name: Ensure install dir exists
+  become: true
+  file:
+    path: "{{ sabnzbd_install_dir }}"
+    state: directory
+
+- name: Download sabnzbd
+  become: true
+  unarchive:
+    remote_src: true
+    src: https://github.com/sabnzbd/sabnzbd/releases/download/{{ sabnzbd_version }}/SABnzbd-{{ sabnzbd_version }}-src.tar.gz
+    dest: "{{ sabnzbd_install_dir }}"
+
+- name: Install dependencies
+  become: true
+  package:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - par2cmdline
+    - unrar
+    - unzip
+    - p7zip
+    - gcc
+    - "{{ python_pip_package }}"
+
+- name: Install pip dependencies
+  become: true
+  pip:
+    name: "{{ item }}"
+    state: present
+    executable: "{{ python_pip_executable }}"
+  with_items:
+    - cheetah
+    - pyopenssl
+    - sabyenc
+
+- name: Copy init file
+  become: true
+  template:
+    src: "{{ sabnzbd_init_file }}"
+    dest: "{{ sabnzbd_init_location }}"
+
+- name: Copy config file
+  become: true
+  template:
+    src: sabnzbd.ini.j2
+    dest: "{{ sabnzbd_install_dir }}/sabnzbd.ini"
+
+- name: Make directories accessible for sabnzbd
+  become: true
+  file:
+    path: "{{ item }}"
+    owner: "{{ sabnzbd_user }}"
+    group: "{{ sabnzbd_group }}"
+    recurse: true
+  with_items:
+    - "{{ sabnzbd_install_dir }}"
+
+- name: Reload
+  become: true
+  shell: systemctl daemon-reload
 
 - name: Start sabnzbd
   become: true
   service:
     name: sabnzbd
-    state: started
+    state: restarted
     enabled: true
