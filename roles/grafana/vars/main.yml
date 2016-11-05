@@ -1,0 +1,18 @@
+---
+
+grafana_user: grafana
+grafana_group: grafana
+grafana_download_location: /tmp
+grafana_download_dir: "{{ grafana_download_location }}/grafana-{{ grafana_version }}"
+grafana_install_location: /opt/grafana
+
+grafana_config_file: "{{ grafana_install_location }}/conf/defaults.ini"
+grafana_data_dir: "{{ grafana_install_location }}/data"
+grafana_log_dir: "{{ grafana_data_dir }}/log"
+grafana_plugins_dir: "{{ grafana_data_dir }}/plugins"
+grafana_pid_file: "{{ grafana_data_dir }}/.pid"
+
+grafana_version: 3.1.1-1470047149
+
+grafana_binary_location: /usr/bin
+

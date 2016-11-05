@@ -1,0 +1,13 @@
+---
+influxdb_user: influxdb
+influxdb_group: influxdb
+
+influxdb_version: 1.0.2
+influxdb_download_location: /tmp/influxdb
+influxdb_binary: /usr/bin/influxd
+influxdb_config: /etc/influxdb/influxdb.conf
+influxdb_service_file: /etc/systemd/system/influxdb.service
+
+influxdb_username: telegraf
+influxdb_password: telegraf
+influxdb_database: telegraf

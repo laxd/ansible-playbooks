@@ -1,4 +1,0 @@
----
-influxdb_username: telegraf
-influxdb_password: telegraf
-influxdb_database: telegraf

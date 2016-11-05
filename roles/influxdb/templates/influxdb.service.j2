@@ -1,0 +1,18 @@
+[Unit]
+Description=InfluxDB
+Documentation=https://docs.influxdata.com/influxdb/
+After=network-online.target
+
+[Service]
+User={{ influxdb_user }}
+Group={{ influxdb_group }}
+LimitNOFILE=65536
+EnvironmentFile=-/etc/default/influxdb
+ExecStart={{ influxdb_binary }} -config {{ influxdb_config }} ${INFLUXD_OPTS}
+KillMode=control-group
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=influxd.service
+

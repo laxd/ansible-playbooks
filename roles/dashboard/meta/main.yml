@@ -1,5 +1,0 @@
----
-dependencies:
-  - { role: aur, package: influxdb }
-  - { role: aur, package: grafana-bin }
-

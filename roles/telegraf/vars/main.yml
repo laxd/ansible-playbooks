@@ -1,5 +1,10 @@
 ---
-influxdb_url: http://10.0.1.101:8086
+telegraf_version: 1.0.1
+telegraf_download_location: "/tmp/telegraf/{{ telegraf_version }}"
+telegraf_binary_location: "/usr/bin/telegraf"
+telegraf_config_location: "/etc/telegraf/telegraf.conf"
+
+influxdb_url: http://dashboard:8086
 influxdb_username: telegraf
 influxdb_password: telegraf
 influxdb_database: telegraf

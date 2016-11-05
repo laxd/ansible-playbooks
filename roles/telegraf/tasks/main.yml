@@ -1,8 +1,36 @@
 ---
+- name: Create download dir
+  connection: local
+  file:
+    path: "{{ telegraf_download_location }}"
+    state: directory
+
+- name: Download tar ball
+  connection: local
+  unarchive:
+    remote_src: true
+    src: "https://dl.influxdata.com/telegraf/releases/telegraf-{{ telegraf_version }}_linux_amd64.tar.gz"
+    dest: "{{ telegraf_download_location }}"
+    creates: "{{ telegraf_download_location }}/telegraf"
+
+- name: Copy files
+  become: true
+  copy:
+    src: "{{ telegraf_download_location }}/telegraf{{ item }}"
+    dest: "{{ item }}"
+  with_items:
+    - "/usr/bin/telegraf"
+    - "/etc/logrotate.d/telegraf"
+
+- name: Ensure config dir exists
+  become: true
+  file:
+    path: "/etc/telegraf"
+    recurse: true
+    state: directory
+
 - name: Copy config file
   become: true
   template:
     src: telegraf.conf
     dest: /etc/telegraf/telegraf.conf
-  notify:
-    restart telegraf

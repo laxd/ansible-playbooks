@@ -1,0 +1,107 @@
+---
+
+- name: Create influxdb group
+  become: true
+  group:
+    name: "{{ influxdb_group }}"
+    state: present
+
+- name: Create influxdb user
+  become: true
+  user:
+    name: "{{ influxdb_user }}"
+    group: "{{ influxdb_group }}"
+    system: yes
+    state: present
+
+- name: Create download dir
+  connection: local
+  file:
+    path: "{{ influxdb_download_location }}"
+    state: directory
+
+
+- name: Download tar ball
+  connection: local
+  unarchive:
+    remote_src: true
+    src: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_amd64.tar.gz"
+    dest: "{{ influxdb_download_location }}"
+    creates: "{{ influxdb_download_location }}/influxdb-{{ influxdb_version }}-1"
+
+- name: Create dirs
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ influxdb_user }}"
+    group: "{{ influxdb_group }}"
+  with_items:
+    - /etc/influxdb
+    - /var/lib/influxdb
+
+- name: Copy files
+  become: true
+  copy:
+    src: "{{ influxdb_download_location }}/influxdb-{{ influxdb_version }}-1{{ item }}"
+    dest: "{{ item }}"
+  with_items:
+    - "/usr/share/man/man1/influxd.1.gz"
+    - "/usr/share/man/man1/influxd-backup.1.gz"
+    - "/usr/share/man/man1/influxd-config.1.gz"
+    - "/usr/share/man/man1/influxd-restore.1.gz"
+    - "/usr/share/man/man1/influxd-run.1.gz"
+    - "/usr/share/man/man1/influxd-version.1.gz"
+    - "/usr/share/man/man1/influx.1.gz"
+    - "/etc/influxdb/influxdb.conf"
+
+- name: Copy binaries
+  become: true
+  copy:
+    src: "{{ influxdb_download_location }}/influxdb-{{ influxdb_version }}-1{{ item }}"
+    dest: "{{ item }}"
+    mode: 0755
+  with_items:
+    - "/usr/bin/influx_stress"
+    - "/usr/bin/influxd"
+    - "/usr/bin/influx_inspect"
+    - "/usr/bin/influx"
+    - "/usr/bin/influx_tsm"
+
+
+- name: Copy service file
+  become: true
+  template:
+    src: influxdb.service.j2
+    dest: "{{ influxdb_service_file }}"
+
+- name: Reload
+  become: true
+  shell: systemctl daemon-reload
+
+- name: Restart influxdb and enable
+  become: true
+  service:
+    name: influxdb
+    state: started
+    enabled: yes
+
+- name: Create database
+  shell: influx --execute "CREATE DATABASE {{ influxdb_database }}"
+  register: create_db_result
+  failed_when: "create_db_result.rc != 0 and (\"unable to parse Basic Auth\" not in create_db_result.stderr)"
+  changed_when: "create_db_result.rc == 0"
+
+- name: Set influxdb username/password
+  shell: influx --database {{ influxdb_database }} --execute "CREATE USER {{ influxdb_username }} WITH PASSWORD '{{ influxdb_password }}' WITH ALL PRIVILEGES"
+  register: create_user_result
+  failed_when: "create_user_result.rc != 0 and (\"unable to parse Basic Auth\" not in create_user_result.stderr)"
+  changed_when: "create_user_result.rc == 0"
+
+- name: Enable auth
+  become: true
+  replace:
+    dest: /etc/influxdb/influxdb.conf
+    regexp: 'auth-enabled = false'
+    replace: 'auth-enabled = true'
+
