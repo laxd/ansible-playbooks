@@ -1,21 +1,41 @@
 ---
+- name: Create transmission group
+  become: true
+  group:
+    name: "{{ transmission_group }}"
+    state: present
 
-- name: Install Transmission
+- name: Create transmission user
+  become: true
+  user:
+    name: "{{ transmission_user }}"
+    group: "{{ transmission_group }}"
+    system: yes
+    state: present
+
+- name: Install transmission
+  become: true
   package:
     name: transmission-cli
     state: present
 
-- name: Stop transmission before copying config
+- name: Ensure transmission is stopped
   become: true
   service:
     name: transmission
     state: stopped
 
+- name: Create required dirs
+  become: true
+  file:
+    path: "{{ transmission_install_dir }}/.config/transmission-daemon"
+    state: directory
+
 - name: Copy transmission config
   become: true
   copy:
     src: settings.json
-    dest: /var/lib/transmission/.config/transmission-daemon/settings.json
+    dest: "{{ transmission_install_dir }}/.config/transmission-daemon/settings.json"
 
 - name: Start and enable transmission
   become: true

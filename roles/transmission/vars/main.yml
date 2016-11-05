@@ -1,0 +1,7 @@
+---
+
+transmission_install_dir: /var/lib/transmission
+transmission_user: transmission
+transmission_group: transmission
+
+
