@@ -1,0 +1,12 @@
+[Unit]
+Description=Headphones - Automatic music downloader for SABnzbd
+
+[Service]
+ExecStart=/usr/bin/python2 {{ headphones_install_dir }}/Headphones.py --daemon --config {{ headphones_config_dir }}/headphones.ini --datadir {{ headphones_data_dir }} --nolaunch --quiet
+GuessMainPID=no
+Type=forking
+User=headphones
+Group=headphones
+
+[Install]
+WantedBy=multi-user.target

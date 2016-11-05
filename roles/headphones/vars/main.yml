@@ -1,0 +1,7 @@
+---
+
+headphones_install_dir: /opt/headphones
+headphones_user: headphones
+headphones_group: "{{ headphones_user }}"
+headphones_config_dir: /etc/headphones
+headphones_data_dir: "{{ headphones_install_dir}}/data"

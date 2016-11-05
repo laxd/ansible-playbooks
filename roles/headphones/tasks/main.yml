@@ -1,0 +1,69 @@
+---
+
+- name: Create headphones group
+  become: true
+  group:
+    name: "{{ headphones_group }}"
+    state: present
+
+- name: Create user/group
+  become: true
+  user:
+    name: "{{ headphones_user }}"
+    group: "{{ headphones_group }}"
+    system: yes
+    state: present
+
+- name: Install git
+  package:
+    name: git
+    state: present
+
+- name: Ensure headphones dir is clear
+  become: true
+  file:
+    path: "{{ headphones_install_dir }}"
+    state: absent
+
+- name: Download headphones
+  become: true
+  git:
+    repo: https://github.com/rembo10/headphones.git
+    dest: "{{ headphones_install_dir }}"
+    update: false
+
+- name: Create required dirs
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ headphones_user }}"
+    group: "{{ headphones_group }}"
+  with_items:
+    - "{{ headphones_install_dir }}"
+    - "{{ headphones_data_dir }}"
+    - "{{ headphones_config_dir }}"
+
+- name: Copy service file
+  become: true
+  template:
+    src: headphones.service.j2
+    dest: /lib/systemd/system/headphones.service
+    mode: 0744
+
+- name: Copy config file
+  become: true
+  template:
+    src: headphones.ini.j2
+    dest: "{{ headphones_config_dir }}/headphones.ini"
+
+- name: Reload systemd
+  become: true
+  shell: systemctl daemon-reload
+
+- name: Start headphones
+  become: true
+  service:
+    name: headphones
+    state: restarted
+    enabled: yes
