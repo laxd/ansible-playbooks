@@ -1,0 +1,4 @@
+---
+elasticsearch_version: 5.0.1
+elasticsearch_install_dir: /opt
+elasticsearch_location: "{{ elasticsearch_install_dir }}/elasticsearch-{{ elasticsearch_version }}"
