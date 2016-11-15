@@ -2,28 +2,28 @@
 - name: Create elasticsearch group
   become: true
   group:
-    name: "{{ elasticsearch_group }}"
-    state: present
+      name: "{{ elasticsearch_group }}"
+      state: present
 
 - name: Create elasticsearch user
   become: true
   user:
-    name: "{{ elasticsearch_user }}"
-    group: "{{ elasticsearch_group }}"
-    system: yes
-    state: present
+      name: "{{ elasticsearch_user }}"
+      group: "{{ elasticsearch_group }}"
+      system: yes
+      state: present
 
 - name: Download and unpack
   extract:
       remote_src: true
       src: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{elasticsearch_version}}.tar.gz"
       dest: "{{ elasticsearch_install_dir }}"
- 
+
 - name: Copy service file
   become: true
   template:
-    src: elasticsearch.service.j2
-    dest: /etc/systemd/system/elasticsearch.service
+      src: elasticsearch.service.j2
+      dest: /etc/systemd/system/elasticsearch.service
 
 - name: Reload systemd
   become: true
@@ -32,7 +32,7 @@
 - name: Start elasticsearch
   become: true
   service:
-    name: elasticsearch
-    state: started
-    enabled: true
-   
+      name: elasticsearch
+      state: started
+      enabled: true
+
