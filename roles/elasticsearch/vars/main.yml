@@ -2,3 +2,10 @@
 elasticsearch_version: 5.0.1
 elasticsearch_install_dir: /opt
 elasticsearch_location: "{{ elasticsearch_install_dir }}/elasticsearch-{{ elasticsearch_version }}"
+
+elasticsearch_user: elasticsearch
+elasticsearch_group: elasticsearch
+
+elasticsearch_pid_file: /var/run/elasticsearch/elasticsearch.pid
+elasticsearch_environment_file: /etc/default/elasticsearch
+
