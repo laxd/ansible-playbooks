@@ -1,0 +1,4 @@
+---
+install_commands:
+    - "apt-get update -y"
+    - "apt-get install -y python"

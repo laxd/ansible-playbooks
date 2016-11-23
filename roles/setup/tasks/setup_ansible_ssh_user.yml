@@ -1,19 +1,22 @@
 ---
+# Required as bootstrap.yml requires gather_facts to be disabled
 - name: "Gather facts"
   setup:
 
-
 - name: "Ensure sudo is installed"
+  become: true
   package:
     name: sudo
     state: present
 
 - name: "Ensure sudo group is available"
+  become: true
   group:
     name: sudo
     state: present
 
 - name: "Allow passwordless sudo for sudoers"
+  become: true
   lineinfile:
     dest: /etc/sudoers
     state: present
@@ -21,13 +24,20 @@
     line: "%sudo ALL=(ALL) NOPASSWD: ALL"
 
 - name: "Create ansible user"
+  become: true
   user: 
     name: ansible
     groups: sudo
     append: yes
     state: present
 
+- name: "Create ssh key"
+  local_action:
+    module: shell ssh-keygen -N '' -f config/id_rsa
+    creates: config/id_rsa
+
 - name: "Publish ssh key"
+  become: true
   authorized_key:
     user: ansible 
-    key: "{{ lookup('file', '/root/.ssh/id_rsa.pub')}}"
+    key: "{{ lookup('file', 'config/id_rsa.pub')}}"

@@ -1,7 +1,13 @@
 ---
-- name: "Bootstrap python on the host"
-  script: bootstrap.sh
-  remote_user: root
+- include_vars: "{{ item }}"
+  with_first_found:
+      - "{{ ansible_distribution }}.yml"
+      - "{{ ansible_os_family }}.yml"
+      - "default.yml"
+
+- name: Bootstrapping python
+  raw: "{{ item }}"
+  with_flattened:
+      - "{{ install_commands }}"
   args:
-    creates: /usr/bin/python2
-   
+      creates: /usr/bin/python
