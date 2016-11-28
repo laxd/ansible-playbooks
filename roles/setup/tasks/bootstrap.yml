@@ -6,6 +6,7 @@
       - "default.yml"
 
 - name: Bootstrapping python
+  become: true
   raw: "{{ item }}"
   with_flattened:
       - "{{ install_commands }}"
