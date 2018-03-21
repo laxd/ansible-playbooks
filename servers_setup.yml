@@ -1,28 +1,11 @@
 ---
 
-- hosts: dashboard
-  roles:
-    - influxdb
-    - grafana
 
 - hosts: backup
   roles:
     - crashplan
 
-- hosts: jira
-  roles:
-    - jira
-
 - hosts: fah
   roles:
     - foldingathome
 
-- hosts: test
-  roles:
-    - influxdb
-    - grafana
-
-- hosts: all
-  roles:
-    - vim
-    - telegraf

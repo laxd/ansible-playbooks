@@ -1,0 +1,10 @@
+---
+
+ hosts: dashboard
+  roles:
+    - influxdb
+    - grafana
+
+- hosts: all
+  roles:
+    - telegraf
