@@ -1,17 +1,5 @@
 ---
 
-- hosts: torrent
-  roles:
-    - transmission
-    - nzb
-    - couchpotato
-    - headphones
-
-- hosts: plex
-  roles:
-    - plex
-    - filebot
-
 - hosts: dashboard
   roles:
     - influxdb
