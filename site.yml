@@ -1,0 +1,7 @@
+---
+
+- import_playbook: backup/site.yml
+- import_playbook: dashboard/site.yml
+- import_playbook: development_tools/site.yml
+- import_playbook: distributed_computing/site.yml
+- import_playbook: media/site.yml

@@ -1,0 +1,6 @@
+---
+
+- hosts: backup
+  roles:
+    - crashplan
+

@@ -1,10 +1,5 @@
 ---
 
-
-- hosts: backup
-  roles:
-    - crashplan
-
 - hosts: fah
   roles:
     - foldingathome
