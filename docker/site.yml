@@ -1,0 +1,20 @@
+---
+- hosts: docker
+  tasks:
+    - name: Install docker
+      become: true
+      package:
+        name: docker
+        state: present
+
+    - name: Enable external docker API access
+      copy:
+        src: files/override.conf
+        dest: /etc/systemd/system/docker.service.d/override.conf
+
+    - name: Autostart docker
+      become: true
+      service:
+        name: docker
+        state: started
+        enabled: true
