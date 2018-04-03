@@ -7,7 +7,17 @@
         name: docker
         state: present
 
+    - name: Ensure docker service dir is available
+      become: true
+      file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+
     - name: Enable external docker API access
+      become: true
       copy:
         src: files/override.conf
         dest: /etc/systemd/system/docker.service.d/override.conf
@@ -16,5 +26,12 @@
       become: true
       service:
         name: docker
-        state: started
         enabled: true
+      notify: Restart docker
+
+  handlers:
+    - name: Restart docker
+      become: true
+      service:
+        name: docker
+        state: restarted
