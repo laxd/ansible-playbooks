@@ -1,3 +1,0 @@
----
-install_commands:
-    - "sudo pacman -Syyu --noconfirm python2"
