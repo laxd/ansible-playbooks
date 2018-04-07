@@ -1,4 +1,10 @@
 ---
+
+- name: "Check vars setup correctly"
+  fail:
+    msg: "Aborting: This play requires 'ansible_public_key' variable"
+  when: ansible_public_key is not defined
+
 # Required as bootstrap.yml requires gather_facts to be disabled
 - name: "Gather facts"
   setup:
@@ -31,13 +37,10 @@
     append: yes
     state: present
 
-- name: "Create ssh key"
-  local_action:
-    module: shell ssh-keygen -N '' -f config/id_rsa
-    creates: config/id_rsa
-
 - name: "Publish ssh key"
   become: true
   authorized_key:
     user: ansible 
-    key: "{{ lookup('file', 'config/id_rsa.pub')}}"
+    key: "{{ ansible_public_key }}"
+    state: present
+    exclusive: true

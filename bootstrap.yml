@@ -1,4 +1,4 @@
 ---
-hosts: all
-roles:
-  - boostrap
+- hosts: all
+  roles:
+    - bootstrap
