@@ -1,0 +1,25 @@
+---
+
+- name: Add repo
+  become: true
+  get_url:
+    url: https://download.gocd.org/gocd.repo
+    dest: /etc/yum.repos.d/gocd.repo
+
+- name: Install java
+  become: true
+  package:
+    name: java-1.8.0-openjdk
+    state: present
+
+- name: Install go server
+  become: true
+  package:
+    name: go-server
+    state: present
+
+- name: Start server
+  service:
+    name: go-server
+    state: started
+    enabled: yes

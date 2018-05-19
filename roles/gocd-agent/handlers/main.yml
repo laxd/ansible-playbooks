@@ -1,0 +1,6 @@
+---
+- name: Restart agent
+  become: true
+  service:
+    name: go-agent
+    state: restarted

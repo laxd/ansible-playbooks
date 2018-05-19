@@ -1,0 +1,8 @@
+---
+- hosts: gocd-server
+  roles:
+    - gocd-server
+
+- hosts: gocd-agent
+  roles:
+    - gocd-agent

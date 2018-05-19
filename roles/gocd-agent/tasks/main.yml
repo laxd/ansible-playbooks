@@ -1,0 +1,34 @@
+---
+
+- name: Add repo
+  become: true
+  get_url:
+    url: https://download.gocd.org/gocd.repo
+    dest: /etc/yum.repos.d/gocd.repo
+
+- name: Install java
+  become: true
+  package:
+    name: java-1.8.0-openjdk
+    state: present
+
+- name: Install go agent
+  become: true
+  package:
+    name: go-agent
+    state: present
+  notify: Restart agent
+
+- name: Copy config
+  become: true
+  template:
+    src: go-agent.j2
+    dest: /etc/default/go-agent
+  notify: Restart agent
+
+- name: Enable agent
+  become: true
+  service:
+    name: go-agent
+    enabled: yes
+  notify: Restart agent
