@@ -1,0 +1,12 @@
+---
+
+- name: Reload systemd
+  become: true
+  shell: systemctl daemon-reload
+
+- name: Restart nexus
+  become: true
+  service:
+    name: nexus
+    state: restarted
+

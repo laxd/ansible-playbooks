@@ -1,0 +1,56 @@
+---
+
+- name: Create nexus group
+  become: true
+  group:
+    name: nexus
+    state: present
+
+- name: Create nexus user
+  become: true
+  user:
+    name: nexus
+    group: nexus
+
+- name: Install nexus dependencies
+  become: true
+  package:
+    name: java-1.8.0-openjdk
+    state: present
+
+- name: Download nexus installation files
+  become: true
+  unarchive:
+    src: https://download.sonatype.com/nexus/3/nexus-{{ nexus_version }}-unix.tar.gz
+    dest: /opt/
+    remote_src: yes
+    owner: nexus
+    group: nexus
+    mode: 0750
+  notify: Restart nexus
+
+- name: Setup permissions for nexus directories
+  become: true
+  file:
+    name: "{{ item }}"
+    owner: nexus
+    group: nexus
+    mode: 0700
+    state: directory
+    recurse: true
+  with_items:
+    - /opt/sonatype-work
+    - /opt/nexus-{{ nexus_version }}
+
+- name: Copy nexus service file
+  become: true
+  template:
+    src: nexus.service.j2
+    dest: /etc/systemd/system/nexus.service
+  notify: Reload systemd
+
+- name: Enable nexus service
+  become: true
+  service:
+    name: nexus
+    enabled: true

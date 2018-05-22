@@ -1,0 +1,14 @@
+[Unit]
+Description=Sonatype Nexus {{ nexus_version }}
+
+[Service]
+User=nexus
+Type=simple
+PIDFile=/opt/nexus-{{ nexus_version}}/bin/jsw/linux-x86-64/nexus.pid
+ExecStart=/opt/nexus-{{ nexus_version }}/bin/nexus start-launchd
+ExecReload=/opt/nexus-{{ nexus_version }}/bin/nexus restart
+ExecStop=/opt/nexus-{{ nexus_version }}/bin/nexus stop
+
+[Install]
+Alias=nexus
+WantedBy=default.target
