@@ -1,4 +1,0 @@
-test ansible_ssh_host=10.12.56.10 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key=.vagrant/machines/default/virtualbox/private_key
-
-[docker]
-test
