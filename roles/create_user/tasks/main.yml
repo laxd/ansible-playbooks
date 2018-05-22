@@ -1,0 +1,13 @@
+---
+
+- name: Create user {{ username }}
+  become: true
+  user:
+    name: "{{ username }}"
+    password: "{{ password }}"
+    state: present
+    group: wheel
+    append: true
+    update_password: always
+
+
