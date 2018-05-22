@@ -2,3 +2,5 @@
 id_rsa
 id_rsa.pub
 .vagrant
+ansible_hosts
+virtualhosts
