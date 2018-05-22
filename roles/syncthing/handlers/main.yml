@@ -1,0 +1,10 @@
+---
+- name: Restart syncthing
+  become: true
+  service:
+    name: syncthing
+    state: restarted
+
+- name: Reload systemd
+  become: true
+  command: systemctl daemon-reload

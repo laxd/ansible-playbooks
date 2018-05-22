@@ -1,0 +1,56 @@
+---
+
+- name: Create syncthing group
+  become: true
+  group:
+    name: syncthing
+    state: present
+
+- name: Create syncthing user
+  become: true
+  user:
+    name: syncthing
+    group: syncthing
+
+- name: Download syncthing binaries
+  unarchive:
+    src: "{{ syncthing_url }}"
+    dest: /tmp/
+    remote_src: yes
+
+- name: Copy syncthing binary to /usr/local/bin
+  become: true
+  copy:
+    remote_src: true
+    src: /tmp/syncthing-linux-amd64-v{{ syncthing_version }}/syncthing
+    dest: /usr/bin/syncthing
+    owner: root
+    group: root
+    mode: 0755
+  notify: Restart syncthing
+
+- name: Copy syncthing service file
+  become: true
+  copy:
+    remote_src: true
+    src: /tmp/syncthing-linux-amd64-v{{ syncthing_version }}/etc/linux-systemd/system/syncthing@.service
+    dest: /etc/systemd/system/syncthing@.service
+    owner: root
+    group: root
+    mode: 0755
+  notify: Reload systemd
+
+- name: Enable syncthing service
+  become: true
+  service:
+    name: syncthing@syncthing
+    state: started
+    enabled: true
+
+- name: Allow external access to syncthing service
+  become: true
+  replace:
+    path: /home/syncthing/.config/syncthing/config.xml
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0'
+  notify: Restart syncthing
