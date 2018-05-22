@@ -1,24 +1,7 @@
 ---
-- name: Install python (debian)
-  become: true
-  raw: "{{ item }}"
-  with_items:
-    - "apt-get update -y"
-    - "apt-get install python -y"
-  when: ansible_os_family == 'Debian'
-  args:
-    creates: /usr/bin/python
 
 - name: Install python (centos)
   become: true
   raw: "yum install python"
-  when: ansible_os_family == 'RedHat'
-  args:
-    creates: /usr/bin/python
-
-- name: Install python (arch)
-  become: true
-  raw: "pacman -Syyu python2"
-  when: ansible_os_family == 'Archlinux'
   args:
     creates: /usr/bin/python
