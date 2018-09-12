@@ -1,0 +1,15 @@
+---
+
+- hosts: all
+  roles:
+    - create_user
+
+  vars_prompt:
+    - name: "username"
+      prompt: "Username"
+    - name: "password"
+      prompt: "Password"
+      private: yes
+      encrypt: "sha512_crypt"
+      confirm: yes
+      salt_size: 7
